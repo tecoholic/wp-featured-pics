@@ -28,13 +28,13 @@ def main():
         imageurl = tds[0].a["href"]
         imageurlsfile.write(imageurl+"\n")
         # image description
-        imagedesc = tds[1].text.strip()
+        imagedesc = tds[1].find("p").text.strip()
         textfile = codecs.open(os.path.join("text", "text_%03d.txt"%filecount),
                                encoding="utf-8", mode="w+")
         textfile.write(imagedesc)
         textfile.close()
         filecount += 1
-        break # remove this @logic :D
+        #break # remove this @logic :D
     imageurlsfile.close()
 
 
