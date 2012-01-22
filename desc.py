@@ -5,37 +5,40 @@ picture. The urls are taken from the pic_page_urls.list
 '''
 
 import os
-import urllib2
+import urllib, urllib2
 import codecs
 
 from BeautifulSoup import BeautifulSoup as bs
+
+baseurl = "http://ta.wikipedia.org/w/api.php?action=query&prop=revisions&\
+format=xml&rvprop=content&rvlimit=1&rvdir=older&titles="
 
 def main():
     ''' The main function '''
     if not os.path.isdir("text"):
         os.mkdir("text")
     opener = urllib2.build_opener()
-    opener.addheaders = [("User-agent", "Mozilla/5.0")]
-    urlfile = open("pic_page_urls.list", "r")
-    imageurlsfile = codecs.open("image_urls.list", encoding="utf-8", mode="w+")
+    opener.addheaders = [("User-agent", "Tecoholic")]
+    urlfile = codecs.open("pic_page_urls.list", encoding="utf-8", mode="r+")
+    #imageurlsfile = codecs.open("image_urls.list", encoding="utf-8", mode="w+")
     filecount = 1
     for url in urlfile.readlines():
-        descpage = opener.open(url)
+        theurl = (baseurl+url.strip().replace(" ", "_")).encode("UTF-8")
+        descpage = opener.open(theurl)
         soup = bs(descpage.read())
-        content = soup.find("div", {"class" : "mw-content-ltr"})
-        tds = content.findAll("td")
+        content = soup.find("rev")
         # image page url
-        imageurl = tds[0].a["href"]
-        imageurlsfile.write(imageurl+"\n")
+        #imageurl = 
         # image description
-        imagedesc = tds[1].find("p").text.strip()
+        # ---- FIXME -----
+        imagedesc = content.text
         textfile = codecs.open(os.path.join("text", "text_%03d.txt"%filecount),
                                encoding="utf-8", mode="w+")
         textfile.write(imagedesc)
         textfile.close()
         filecount += 1
-        #break # remove this @logic :D
-    imageurlsfile.close()
+        break # remove this @logic :D
+    #imageurlsfile.close()
 
 
 if __name__ == "__main__":
