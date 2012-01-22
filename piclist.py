@@ -8,6 +8,7 @@ Note: This may not be very useful.
 '''
 
 import urllib2
+import codecs
 
 from BeautifulSoup import BeautifulSoup as bs
 
@@ -24,9 +25,9 @@ def main():
     content = soup.find("div", {"class" : "mw-content-ltr"})
     lis = content.findAll("ol")[1].findAll("li")
     # Get a file to save the urls
-    holder = open("pic_page_urls.list", "w")
+    holder = codecs.open("pic_page_urls.list", encoding="utf-8", mode="w+")
     for li in lis:
-        holder.write("http://ta.wikipedia.org"+li.a["href"])
+        holder.write(li.a.text)
         holder.write("\n")
     holder.close()
 
