@@ -1,6 +1,7 @@
 # --*-- coding:utf-8 --*--
 
-''' Ths function collects the picture page url and the description for the
+''' 
+This function collects the picture page url and the description for the
 picture. The urls are taken from the pic_page_urls.list
 '''
 
