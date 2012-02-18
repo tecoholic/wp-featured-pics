@@ -26,7 +26,10 @@ def strip_tags(soup, invalid_tags):
                 if not isinstance(c, ns):
                     c = strip_tags(c, invalid_tags)
                 s += unicode(c)
-            tag.replaceWith(s)
+            try:
+                tag.replaceWith(s)
+            except AttributeError:
+                pass
     return soup
 
 def main():
@@ -39,23 +42,25 @@ def main():
     imageurlsfile = codecs.open("image_urls.list", encoding="utf-8", mode="w+")
     filecount = 1
     for url in urlfile.readlines():
-        print "Opening: "+url
-        theurl = (baseurl+url.strip().replace(" ", "_")).encode("UTF-8")
-        apireq = opener.open(theurl)
-        response = json.loads(apireq.read())
-        images = response["parse"]["images"]
-        for image in images:
-            imageurlsfile.write(image)
-        text = response["parse"]["text"]["*"]
-        soup = bs(text).find("p")
-        imagedesc = strip_tags(soup, invalid)
-        textfile = codecs.open(os.path.join("text", "text_%03d.txt"%filecount),
-                               encoding="utf-8", mode="w+")
-        print "Writing to : text_%03d.txt\n"%filecount
-        textfile.write(unicode(imagedesc))
-        textfile.close()
         filecount += 1
-        if filecount > 5:
+        if filecount > 48:
+            print "Opening: "+url.strip().replace("/wiki/", "")
+            theurl = (baseurl+url.strip().replace("/wiki/", "")).encode("UTF-8")
+            apireq = opener.open(theurl)
+            response = json.loads(apireq.read())
+            images = response["parse"]["images"]
+            for image in images:
+                imageurlsfile.write(image)
+            text = response["parse"]["text"]["*"]
+            soup = bs(text).find("p")
+            print soup
+            imagedesc = strip_tags(soup, invalid)
+            textfile = codecs.open(os.path.join("text", "text_%03d.txt"%filecount),
+                                   encoding="utf-8", mode="w+")
+            print "Writing to : text_%03d.txt\n"%filecount
+            textfile.write(unicode(imagedesc))
+            textfile.close()
+        if filecount > 50:
             break # Clear this Mr.Logic :)
     imageurlsfile.close()
 

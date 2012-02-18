@@ -27,7 +27,7 @@ def main():
     # Get a file to save the urls
     holder = codecs.open("pic_page_urls.list", encoding="utf-8", mode="w+")
     for li in lis:
-        holder.write(li.a.text)
+        holder.write(li.a["href"])
         holder.write("\n")
     holder.close()
 
