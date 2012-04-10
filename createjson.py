@@ -19,7 +19,7 @@ def main():
   for txt_file in txt_files:
     txt = codecs.open( os.path.join( folder, txt_file ), encoding="utf-8", mode="r" )
     content = txt.read()
-    obj = "{ \"filename\" : \""+txt_file+"\", \"content\" : \""+content.replace( "\"", "\\\"").replace("\n", "")+ "\" }"
+    obj = "{ \"fileno\" : "+txt_file.strip(".txt").strip("text_")+", \"content\" : \""+content.replace( "\"", "\\\"").replace("\n", "")+ "\" }"
     txtlist.append( obj )
     txt.close()
   jsonfile.write( ",\n".join( text for text in txtlist ) )
